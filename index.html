@@ -79,7 +79,9 @@ const b_base = document.getElementById("b_base");
 const run = document.getElementById("run");
 const resultOutput = document.getElementById("resultOutput");
 run.addEventListener("click", () => {
-    resultOutput.value = calculate(parseInt(a_number.value||"1", Math.min(Math.max(a_base.value||10,2),36)), parseInt(b_number.value||"1", Math.min(Math.max(b_base.value||10,2),36)), mode.value)
+    if (a_base.value < 2 || 36 < a_base.value) a_base.value = "10";
+    if (b_base.value < 2 || 36 < b_base.value) b_base.value = "10";
+    resultOutput.value = calculate(parseInt("0"+a_number.value||"1", a_base.value||"10"), parseInt("0"+b_number.value||"1", b_base.value||"10"), mode.value)
 });
     </script>
   </body>
