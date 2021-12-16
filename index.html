@@ -5,7 +5,7 @@
     <style>
 body {
     background-color: #ccc;
-    font-size: 1.1em;
+    font-size: 1.4em;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -13,7 +13,7 @@ body {
 h1 {
     font-size: 2em;
 }
-#a_base, #b_base {
+#a_base, #b_base, #output_base {
     width:2em;
 }
 select {
@@ -21,7 +21,9 @@ select {
 }
 textarea {
     display: block;
+    height: 3em;
     margin: 1em auto;
+    width: 14em;
 }
     </style>
     <title>n進数計算機</title>
@@ -37,12 +39,14 @@ textarea {
             <input type="number" id="b_base" placeholder="10">進数の
             <input id="b_number" placeholder="1">を
         </div>
+        <input type="number" id="output_base" placeholder="10">進数で
         <select id="mode">
             <option value="a+b">a+b</option>
             <option value="a-b">a-b</option>
             <option value="a*b">a*b</option>
             <option value="a/b">a/b</option>
             <option value="a^b">a^b</option>
+            <option value="a">a</option>
             <option value="a!">a!</option>
             <option value="aPb">aPb</option>
             <option value="aCb">aCb</option>
@@ -50,8 +54,12 @@ textarea {
             <option value="(a√)b">(a√)b</option>
         </select>
         <button id="run">計算!</button>
-        <textarea id="resultOutput" placeholder="計算結果"></textarea>
+        <textarea id="resultOutput" placeholder="計算結果" readonly></textarea>
     </main>
+    <section>
+        <p>入力を小数にした場合、小数点以下は無視されます。ご注意ください。</p>
+        <p>大きな数字を入力すると、正しく計算できないことがあります。ご注意ください。</P>
+    </section>
     <script>
 const factorial = a => {
     let result = 1;
@@ -65,6 +73,7 @@ const calculate = (a, b, mode) => {
        case "a*b" : return a*b
        case "a/b" : return a/b
        case "a^b" : return a**b
+       case "a" : return a
        case "a!" : return factorial(a)
        case "aPb" : return factorial(a) / factorial(a-b)
        case "aCb" : return factorial(a) / factorial(a-b) / factorial(b)
@@ -76,12 +85,18 @@ const a_number = document.getElementById("a_number");
 const b_number = document.getElementById("b_number");
 const a_base = document.getElementById("a_base");
 const b_base = document.getElementById("b_base");
+const output_base = document.getElementById("output_base");
 const run = document.getElementById("run");
 const resultOutput = document.getElementById("resultOutput");
 run.addEventListener("click", () => {
     if (a_base.value < 2 || 36 < a_base.value) a_base.value = "10";
     if (b_base.value < 2 || 36 < b_base.value) b_base.value = "10";
-    resultOutput.value = calculate(parseInt("0"+a_number.value||"1", a_base.value||"10"), parseInt("0"+b_number.value||"1", b_base.value||"10"), mode.value)
+    if (output_base.value < 2 || 36 < output_base.value) output_base.value = "10";
+    resultOutput.value = calculate(
+        parseInt("0"+(a_number.value||"1"), a_base.value||"10"),
+        parseInt("0"+(b_number.value||"1"), b_base.value||"10"),
+        mode.value
+    ).toString(output_base.value||"10");
 });
     </script>
   </body>
